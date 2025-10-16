@@ -1,0 +1,10 @@
+# Node.js frontend
+proj2-frontend/node_modules/
+proj2-frontend/build/
+
+# Spring Boot backend
+proj2-backend/target/
+
+# OS / system files
+.DS_Store
+*.log
