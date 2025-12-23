@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import logo from "../Assets/Logo.PNG";
 import {
   Card,
@@ -38,9 +39,83 @@ export default function AllProducts(props) {
       }
     }
 
+    //Fetch proucts from backend
+      const [products, setProducts] = useState([]);
+      // Fetch products from backend API @GetMapping("/allproducts")
+      useEffect(() => {
+        fetch("http://localhost:8080/allproducts")
+          .then(res => res.json())
+          .then(data => setProducts(data))
+          .catch(err => console.error(err));
+      }, []);
+
   return (
     <>
+
     <div style={{ backgroundColor: "#cfbfbfff", padding: "20px", margin: "10px" }}>
+      {products.length > 0
+        ?products.map((product, index) => (
+            <Card
+              key={index}
+              style={{
+                width: "250px",
+                display: "inline-block",
+                margin: "10px",
+                padding: "10px",
+                textAlign: "center",
+              }}
+            >
+              <CardMedia
+                component="img"
+                // height="150px"
+                width="100% "
+                image={logo}
+                alt={product.name}
+              />
+              <CardContent
+                style={{ textAlign: "left", backgroundColor: "#99daa2ff" }}
+              >
+                <Typography variant="h5">{product.name}</Typography>
+                <Typography variant="body1" color="text.secondary">
+                  Brand: {product.brand}
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  Model: {product.model}
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  Rating: {product.rating}/5
+                </Typography>
+                <Typography variant="body1" sx={{ color: "green" }}>
+                  Price: ₹{product.price}
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  Description: {product.description}
+                </Typography>
+              </CardContent>
+              <CardActionArea>
+                <button
+                  style={{
+                    backgroundColor: "#4CAF50",
+                    width: "100%",
+                    marginTop: "10px",
+                    color: "white",
+                    padding: "8px",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => addtoCart(product)}
+                >
+                  Add to Cart
+                </button>
+              </CardActionArea>
+            </Card>
+          ))
+        : "No Products to Display"}
+    </div>
+
+    {/* Display products in card formatfrom var stored n frontend only
+     <div style={{ backgroundColor: "#cfbfbfff", padding: "20px", margin: "10px" }}>
       {props.allProducts.length > 0
         ? props.allProducts.map((product, index) => (
             <Card
@@ -100,7 +175,7 @@ export default function AllProducts(props) {
             </Card>
           ))
         : "No Products to Display"}
-    </div>
+    </div> */}
     {/* <div><pre>{JSON.stringify(props.cartItems, null, 2)}</pre></div> */}
     </>
   );

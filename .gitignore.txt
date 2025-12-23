@@ -1,10 +1,17 @@
-# Node.js frontend
-proj2-frontend/node_modules/
-proj2-frontend/build/
+# ================= FRONTEND =================
+frontend/node_modules/
+frontend/build/
+frontend/dist/
 
-# Spring Boot backend
-proj2-backend/target/
+# ================= BACKEND =================
+backend/target/
+backend/*.log
 
-# OS / system files
+# ================= IDE =================
+.idea/
+.vscode/
+*.iml
+
+# ================= OS =================
 .DS_Store
-*.log
+Thumbs.db

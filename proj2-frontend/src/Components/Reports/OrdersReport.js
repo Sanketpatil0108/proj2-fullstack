@@ -1,4 +1,6 @@
 import React from "react";
+
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -8,24 +10,16 @@ import {
 } from "@mui/material";
 
 export default function OrdersReport(props) {
-  const { orders } = props;
+  //const { orders } = props;
 
-  // Handle empty or undefined orders gracefully
-  if (!orders || orders.length === 0) {
-    return (
-      <div
-        style={{
-          textAlign: "center",
-          marginTop: "40px",
-          fontSize: "20px",
-          fontWeight: "bold",
-          color: "#555",
-        }}
-      >
-        No orders found.
-      </div>
-    );
-  }
+  const [orders, setOrders] = useState([]);
+  // Fetch orders from backend API @GetMapping("/allorders")
+  useEffect(() => {
+    fetch("http://localhost:8080/allorders")
+      .then(res => res.json())
+      .then(data => setOrders(data))
+      .catch(err => console.error(err));
+  }, []);
 
   return (
     <Table
@@ -40,29 +34,19 @@ export default function OrdersReport(props) {
       <TableHead sx={{ backgroundColor: "#66a3e0ff" }}>
         <TableRow>
           <TableCell sx={{ color: "white", fontWeight: "bold" }}>#</TableCell>
-          <TableCell sx={{ color: "white", fontWeight: "bold" }}>Order Date</TableCell>
           <TableCell sx={{ color: "white", fontWeight: "bold" }}>Items</TableCell>
+          <TableCell sx={{ color: "white", fontWeight: "bold" }}>Order Date</TableCell>
           <TableCell sx={{ color: "white", fontWeight: "bold" }}>Total (₹)</TableCell>
         </TableRow>
       </TableHead>
 
-      <TableBody>
-        {orders.map((order, index) => (
-          <TableRow key={index}>
-            <TableCell>{index + 1}</TableCell>
-            <TableCell>
-              {order.date ? order.date : "N/A"}
-            </TableCell>
-            <TableCell>
-              {order.items && order.items.length > 0
-                ? order.items.map((item, i) => (
-                    <div key={i}>
-                      {item.name} (x{item.quantity})
-                    </div>
-                  ))
-                : "No items"}
-            </TableCell>
-            <TableCell>{order.total}</TableCell>
+      <TableBody>   {/*This code maps the data fetched from database,takes t in "products" and displays in tabular format.*/}
+        {orders.map(o => (
+          <TableRow >
+            <TableCell>{o.id}</TableCell>
+            <TableCell>{o.items}</TableCell>
+            <TableCell>{o.orderdate}</TableCell>
+            <TableCell>{o.total}</TableCell>
           </TableRow>
         ))}
       </TableBody>

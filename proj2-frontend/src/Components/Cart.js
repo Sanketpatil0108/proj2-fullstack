@@ -23,7 +23,7 @@ export default function Cart(props) {
     0
   );
 
-  const placeOrder = () => {
+  const placeOrder = async () => {
     if (props.cartItems.length === 0) {
       alert("Your cart is empty!");
       return;
@@ -35,6 +35,35 @@ export default function Cart(props) {
       total: total,
       date: new Date().toLocaleString(),
     };
+
+    // ✅ Convert cart items to single string (JS way)
+    const itemsString = props.cartItems
+    .map(
+      (item) =>
+        `${item.name} (Qty:${item.quantity}, Price:${item.price})`
+    )
+    .join(" | ");
+    
+    const newOrder1 = {
+      items: itemsString,
+      totalAmount: total,  // convert to string for BigDecimal
+      orderDate: new Date().toString(),  // better ISO format
+    };
+
+    // Sending the order data to backend
+    const response = await fetch ("http://localhost:8080/placeorder", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(newOrder1)
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to save product");
+    }
+    
+    alert("✅ order placed successfully!");
 
     // ✅ use setOrders instead of setOrderss
     props.setOrders((prevOrders) => [...prevOrders, newOrder]);

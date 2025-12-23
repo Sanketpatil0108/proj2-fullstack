@@ -1,6 +1,6 @@
 // import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useEffect,useState } from 'react';
 import Navbar from "./Components/Navbar.js";
 import Footer from "./Components/Footer.js";
 import Addproduct from './Components/Addproduct.js';
@@ -17,6 +17,14 @@ function App() {
   const [cartItems, setCartItems] = useState([]);
   const [orders, setOrders] = useState([]);
 
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:8080/hello")
+      .then(res => res.text())
+      .then(data => setMessage(data));
+  }, []);
+
   return (
     <div  
     style={{
@@ -24,6 +32,9 @@ function App() {
       textAlign: "center",
       flexDirection: "column",  
       }}>
+    {/* <div>
+      <h2>{message}</h2>
+    </div> */}
       <Navbar userType={userType} setUserType={setUserType} cartStatus={cartStatus} setCartstatus={setCartstatus} />
       <div style={{display: "flex", flexDirection:"column", height: "100%"}}>
         {userType === "Customer" && cartStatus === "closed" && <Allproducts allProducts={allProducts} cartItems={cartItems} setCartItems={setCartItems} />}

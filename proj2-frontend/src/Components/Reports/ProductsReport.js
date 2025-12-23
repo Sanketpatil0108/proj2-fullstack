@@ -1,7 +1,18 @@
 import React from 'react'
+import { useEffect, useState } from 'react'
 import { Table, TableBody, TableHead, TableRow, TableCell } from "@mui/material"
 
 export default function ProductsReport(props) {
+
+  const [products, setProducts] = useState([]);
+  // Fetch products from backend API @GetMapping("/allproducts")
+  useEffect(() => {
+    fetch("http://localhost:8080/allproducts")
+      .then(res => res.json())
+      .then(data => setProducts(data))
+      .catch(err => console.error(err));
+  }, []);
+
   return (
     <>
     <Table 
@@ -15,6 +26,7 @@ export default function ProductsReport(props) {
       >
         <TableHead sx={{ backgroundColor: "#66a3e0ff" }}>
           <TableRow>
+            <TableCell sx={{ color: "white", fontWeight: "bold" }}>Id</TableCell>
             <TableCell sx={{ color: "white", fontWeight: "bold" }}>Name</TableCell>
             <TableCell sx={{ color: "white", fontWeight: "bold" }}>Model</TableCell>
             <TableCell sx={{ color: "white", fontWeight: "bold" }}>Brand</TableCell>
@@ -22,8 +34,20 @@ export default function ProductsReport(props) {
             <TableCell sx={{ color: "white", fontWeight: "bold" }}>Rating</TableCell>
           </TableRow>
         </TableHead>
-        {/* ----- Table Body (Dynamic Data) ----- */}
-        <TableBody>
+        <TableBody>   {/*This code maps the data fetched from database,takes t in "products" and displays in tabular format.*/}
+        {products.map(p => (
+          <TableRow >
+            <TableCell>{p.id}</TableCell>
+            <TableCell>{p.name}</TableCell>
+            <TableCell>{p.model}</TableCell>
+            <TableCell>{p.brand}</TableCell>
+            <TableCell>{p.price}</TableCell>
+            <TableCell>{p.rating}</TableCell>
+          </TableRow>
+        ))}
+        </TableBody>
+        {/* ----- Table Body (Dynamic Data) ----- */}  
+        {/* <TableBody> // (Use this when taking data stored in frontend code and using values as props)
           {(
             // For each element (map):
             // 1. product = the current product object
@@ -40,8 +64,9 @@ export default function ProductsReport(props) {
               </TableRow>
             ))
           ) }
-        </TableBody>
+        </TableBody> */}
       </Table>  
+
       </>
   )
 }

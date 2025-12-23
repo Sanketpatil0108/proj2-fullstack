@@ -11,25 +11,39 @@ export default function AddProduct(props) {
   const [description, setDescription] = useState("");
 
 // Function to handle adding a new product
-  const handleAddProduct = () => {
+  const handleAddProduct = async () => {
     if (!name || !brand || !price) {
       alert("Please fill all required fields!");
       return;
     }
-    // Create new product object which has Srno + form data
+    // Create new product object which will be sent to backend
     const newProduct = {
-      srno: props.allProducts.length
-        ? props.allProducts[props.allProducts.length - 1].srno + 1
-        : 1,
       name,
       model,
       brand,
-      rating,
-      price,
+      rating: Number(rating),
+      price: Number(price),
       description,
     };
-    // Update the product list in parent component
-    props.setAllProducts([...props.allProducts, newProduct]);
+
+    // Update parent's allProducts array
+    if (props.allProducts && props.setAllProducts) {
+      props.setAllProducts([...props.allProducts, newProduct]);
+    }
+
+    // Code to send newProduct to backend API using POST request
+    const response = await fetch ("http://localhost:8080/addproduct", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(newProduct)
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to save product");
+    }
+    
     alert("✅ Product added successfully!");
 
     // Reset input fields
@@ -49,7 +63,7 @@ export default function AddProduct(props) {
 
       <FormControl
         style={{
-          width: "70%",
+          width: "80%",
           margin: "auto",
           display: "flex",
           gap: "20px",
