@@ -1,12 +1,16 @@
 package com.sanket.proj2_backend.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(
+        name = "products",
+        indexes = {
+                @Index(name = "idx_product_name", columnList = "name"),         //Simple index
+                @Index(name = "idx_brand_price", columnList = "brand, price")   //Complex Index
+        }
+)
 @NoArgsConstructor
 public class Products {
 
